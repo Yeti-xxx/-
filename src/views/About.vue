@@ -1,9 +1,8 @@
 <template>
-  <router-view></router-view>
+  <div></div>
 </template>
 
 <script setup>
-import './assets/css/reset.css'
 </script>
 
 <style lang='less' scoped>
