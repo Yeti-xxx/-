@@ -6,8 +6,12 @@
 			</h1>
 			<div class='content-nav'>
 				<ul>
-					<li>首页</li>
-					<li>课程</li>
+					<li>
+						<router-link to="/">首页</router-link>
+					</li>
+					<li>
+						<router-link to="/course">课程</router-link>
+					</li>
 					<li>会员</li>
 				</ul>
 			</div>
@@ -33,43 +37,50 @@ import { Search , ShoppingCart} from "@element-plus/icons-vue";
 
 <style scoped>
 header{
+	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	width:100%;
-	height: 100px;
-	background: white;
-	box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.16);
-	opacity: 1;
+	height: 100%;
+	background: #ffffff;
+	box-shadow: 0px 5px 6px rgba(0,0,0,0.16);
 }
 .header-content{
 	display: flex;
 	justify-content: space-around;
-	width: 1200px;
+	width:1200px;
 }
 .content-logo{
-	width: 160px;
-    height: 55px;
-    margin: 10px 0;
-    cursor: pointer;
+	width:160px;
+	height: 55px;
+	margin:10px 0;
+	cursor: pointer;
 }
 .content-logo img{
 	height: 100%;
 }
 .content-nav{
 	width: 300px;
-    height: 75px;
+	height: 75px;
 }
 .content-nav ul{
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 	width: 100%;
-    height: 75px;
+	height: 75px;
 }
 .content-nav ul li{
-	font-size: 18px;
-    color: #808080;
+	font-size:18px;
+	color:#808080;
+	cursor: pointer;
+}
+.content-nav ul li a{
+	text-decoration: none;
+	font-size:18px;
+	color:#808080;
+	cursor: pointer;
 }
 .search-buy-login{
 	display: flex;
@@ -78,29 +89,29 @@ header{
 	width: 650px;
 }
 .content-search{
-    display: flex;
-    align-items: center;
-    padding: 5px 10px;
-    width: 350px;
-    height: 35px;
-    border-radius: 8px;
-    background: #f0f2f4;
+	display: flex;
+	align-items: center;
+	padding:5px 10px;
+	width: 350px;
+	height: 35px;
+	background: #F0F2F4;
+	border-radius: 8px;
 }
 .content-search input{
-	padding: 0 10px;
-    width: 430px;
-    height: 40px;
-    border: 0;
-    border-radius: 8px;
-    color: #808080;
-    background: #f0f2f4;
-    font-size: 16px;
-    outline: none;
+	padding:0 10px;
+	width:430px;
+	height: 40px;
+	border:0;
+	border-radius: 8px;
+	background: #F0F2F4;
+	color:#808080;
+	font-size:16px;
+	outline: none;
 }
 .content-login{
-    font-size: 18px;
-    color: #808080;
-    text-align: center;
-    cursor: pointer;
+	font-size: 18px;
+	color:#808080;
+	text-align: center;
+	cursor: pointer;
 }
 </style>

@@ -2,7 +2,7 @@
     <div class='navSwiper'>
         <div class='content'>
             <div class='navigation'>
-                <ul>
+                <ul >
                     <li v-for="item in getFirstList" :key="item.id" @mouseenter="mourseHover(item.id)"
                     @mouseout="mourseOut">
                         <router-link to='/'>
@@ -155,6 +155,7 @@ let tagPagrList = ref([])
 let slidersList = ref([])
 // 鼠标移入课程分类
 const mourseHover = (id) => {
+    console.log(id);
     // 解决课程bug
     if (id !== 'fd50074e7b86403aa2ac1168abe020a0') {
         isFirst.value = true
