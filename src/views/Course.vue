@@ -14,10 +14,11 @@
 		            <el-tag
 		            	v-for='item in firstCategorys'
 		            	:key='item.id'
-		                class="category-poniter-item"
-		                effect="plain"
-		                type="info"
-		            >  
+		              :class="currentType['fcategory'].id == item.id ? 'category-poniter' : 'category-poniter-item'"
+		              effect="plain"
+		              type="info"
+                  @click='buildingCondition("fcategory",item.id)'
+		            >
 		            	{{ item.categoryName }}
 		            </el-tag>
 		        </div>
@@ -33,9 +34,10 @@
 		            <el-tag
 		            	v-for='item in secondCategorys'
 		            	:key='item.id'
-		                class="category-poniter-item"
-		                effect="plain"
-		                type="info"
+	                :class="currentType['scategory'].id == item.id ? 'category-poniter' : 'category-poniter-item'"
+	                effect="plain"
+	                type="info"
+                  @click='buildingCondition("scategory",item.id)'
 		            >  {{ item.categoryName }}
 		            </el-tag>
 		          </div>
@@ -51,10 +53,11 @@
 		            <el-tag
 		            	v-for='item in courseLevel'
 		            	:key='item.id'
-		                class="category-poniter-item"
-		                effect="plain"
-		                type="info"
-		            >  {{item.text}}
+		              :class="currentType['clevel'].id == item.code ? 'category-poniter' : 'category-poniter-item'"
+		              effect="plain"
+		              type="info"
+                  @click='buildingCondition("clevel",item.code)'
+		            >  {{ item.text }}
 		            </el-tag>
 		          </div>
 		        </div>
@@ -63,27 +66,38 @@
 		<div class='main-container'>
 			<div class="container-top">
 		        <ul class="all">
-		          <li class="item">综合</li>
+		          <li 
+                class="item"
+                @click="handleZonghe"
+                :style='priceSortBy=="1" ? "color:#2C80FF":""'
+              >综合</li>
 		          <li class="item split">|</li>
-		          <li class="item">最新课程</li>
+		          <li 
+                class="item"
+                @click="handleNewCourse"
+                :style='priceSortBy=="2" ? "color:#2C80FF":""'
+              >最新课程</li>
 		          <li class="item split">|</li>
-		          <li class="item">最多购买 </li>
+		          <li 
+                class="item"
+                @click="mostbuy"
+                :style='priceSortBy=="3" ? "color:#2C80FF":""'
+              >最多购买 </li>
 		          <li class="item split">|</li>
-		          <li class="item-price">
-		            <span>价格</span>  
+		          <li 
+                class="item-price"
+                @click="handlePrice"
+              >
+		            <span :style='priceSortBy=="4"|| priceSortBy=="5"? "color:#2C80FF":""'>价格</span>  
 		            <span class="arrow">
-		              <i
-		                  class="el-icon-caret-top"
-		              ></i>
-		              <i
-		                  class="el-icon-caret-bottom"
-		              ></i>
+		              <el-icon :style='priceSortBy=="4" ? "color:#2C80FF":""'><caret-top /></el-icon>
+                  <el-icon :style='priceSortBy=="5" ? "color:#2C80FF":""'><caret-bottom /></el-icon>
 		            </span>
 		          </li>
 		        </ul>
 		        <ul class="right">
 		          <li class="right-item">
-		            <el-radio-group>
+		            <el-radio-group v-model="radio">
 		              <el-radio label="1">免费课程</el-radio>
 		              <el-radio label="2">会员课程</el-radio>
 		            </el-radio-group>
@@ -94,42 +108,43 @@
 		        <div class="newCourseContent">
 		          <ul class="courseUl">
 		            <li 
-		            	class='courseItem' 
+		            	class='courseItem'
 		            	v-for='item in courseList'
 		            	:key='item.id'
 		            >
 						<div class='courseInfo'>
 							<div class='courseBg'>
-								<img :src='item.courseCover'>
+								<img :src="item.courseCover">
 							</div>
 							<div class="courseName">{{item.courseName}}</div>
-				            <div class="courseDegree">{{ courseTypeFn(item.courseLevel) }} · {{item.purchaseCounter + item.purchaseCnt}}人报名</div>
+                <div class="courseDegree">{{ courseTypeFn(item.courseLevel) }} · {{item.purchaseCounter + item.purchaseCnt}}人报名</div>
+		
+                <div class="coursePriceZero" v-if="item.discountPrice == 0">
+                    <div class="pricefree">免费学习</div>
+                    <img src="../assets/img/free.png" alt="">
+                </div>
 
-				            <div class="coursePriceZero" v-if="item.discountPrice == 0">
-				                <div class="pricefree">免费学习</div>
-				                <img src="../assets/img/free.png" alt="">
-				            </div>
+                <div class="coursePrice" v-else-if="item.isMember == 1">
+                    <div class="courseMemberbg"><span class="courseMember">会员免费</span></div>
+                    <div class="price">¥ {{item.discountPrice}}</div>
+                </div>
 
-				            <div class="coursePrice" v-else-if="item.isMember == 1">
-				                <div class="courseMemberbg"><span class="courseMember">会员免费</span></div>
-				                <div class="price">¥ {{item.discountPrice}}</div>
-				            </div>
-
-				            <div class="coursePricePri" v-else>
-				                <div class="pricePri">¥ {{item.discountPrice}}</div>
-				            </div>
+                <div class="coursePricePri" v-else>
+                    <div class="pricePri">¥ {{item.discountPrice}}</div>
+                </div>
 						</div>
 					</li>
 		          </ul>
 		        </div>
-		        <div class="pages">
-		    	<el-pagination 
-		    		background layout="prev, pager, next" :total="total" 
-		    		@current-change="queryCourse"
-		    	/>
-		    </div>
-		    </div>
-		    
+		        <div class='pages'>
+			    	<el-pagination 
+			    		background 
+			    		layout="prev, pager, next" 
+			    		:total="total" 
+			    		@current-change='handleCurrentChange'
+			    	/>
+			    </div>
+		   	</div>
 		</div>
 	</div>
 	<Foot></Foot>
@@ -141,53 +156,166 @@ import mixin from '../mixins/courseType.js'
 import Header from '../components/common/header.vue'
 import Foot from '../components/home/Foot.vue'
 import { getFirstCategorys, getSecondCategorys, searchCourse } from '../utils/api/courseManage'
-let {courseTypeFn} = mixin()
-//课程方向的数据
+let { courseTypeFn } = mixin();
+//获取一级分类的数据
 let firstCategorys = ref([]);
-//课程分类的数据
+//获取二级分类的数据
 let secondCategorys = ref([]);
+let secondCategorysParams = reactive({
+    categoryId:-1 
+})
+//请求二级分类
+const getSecondCategorysFn = ( params )=>{
+  getSecondCategorys( params ).then(res=>{
+    secondCategorys.value = res.data.list;
+  })
+}
 //课程难度的数据
 let courseLevel = ref([
 	{text: '初级',code: '1'}, 
-  	{text: '中级',code: '2'},
- 	{text: '高级',code: '3'}]
- );
-//所有课程的数据
+  {text: '中级',code: '2'},
+ 	{text: '高级',code: '3'}
+]);
+//查询课程的数据
 let courseList = ref([]);
-//查询课程的参数
-let searchCourseParams = reactive({
-	pageNum:1,
-	pageSize:8
-});
-//分页的数据
+//课程的总数量
 let total = ref(0);
-//查询所有课程
-const queryCourseList = ()=>{
-	//查询所有课程
-	searchCourse(searchCourseParams).then(res=>{
+let queryCoursePrams = reactive({
+	pageNum:1,
+	pageSize:8,
+  entity:{
+    firstCategory:'',
+    secondCategory:'',
+    courseLevel:'',
+    isFree:'',
+    isMember:'',
+    sortBy: ''
+  }
+})
+const querySearchCourse = ()=>{
+	searchCourse(queryCoursePrams).then(res=>{
 		courseList.value = res.data.pageInfo.list;
 		total.value = res.data.pageInfo.total;
 	})
 }
+//免费课程 和 会员课程的数据
+let radio = ref('');
+//控制价格 升降序
+let priceSortBy = ref('1');
 //生命周期
 onBeforeMount(()=>{
-	//获取一级分类
+	//请求一级分类
 	getFirstCategorys().then(res=>{
 		firstCategorys.value = res.data.list;
 	})
-	//获取二级分类
-	getSecondCategorys({
-		categoryId:-1
-	}).then(res=>{
-		secondCategorys.value = res.data.list;
-	})
+	//请求二级分类
+	getSecondCategorysFn(secondCategorysParams);
 	//查询所有课程
-	queryCourseList();
+	querySearchCourse();
 })
-//点击分页
-const queryCourse = ( val )=>{
-	searchCourseParams.pageNum = val;
-	queryCourseList(searchCourseParams);
+
+//分页
+const handleCurrentChange = ( val )=>{
+	//页面的赋值
+	queryCoursePrams.pageNum = val;
+	//查询对应页的数据
+	querySearchCourse();
+}
+
+//点击课程方向、分类、难度 对应切换class
+let currentType = reactive({
+  fcategory:{id:''},
+  scategory:{id:''},
+  clevel:{id:''},
+})
+//点击课程方向、分类、难度
+const buildingCondition = ( type , id )=>{
+  //课程方向
+  if( type =='fcategory' ){
+    //免费课程和会员课程 之前数据清空
+    queryCoursePrams.entity.isMember = '';
+    queryCoursePrams.entity.isFree = '';
+    radio.value = '0';
+    //切换class
+    currentType[type].id = id;
+    currentType['scategory'].id = '';
+    currentType['clevel'].id = '';
+    //更新二级分类
+    queryCoursePrams.entity.secondCategory = '';
+    queryCoursePrams.entity.courseLevel = '';
+    secondCategorysParams.categoryId = id;
+    getSecondCategorysFn(secondCategorysParams);
+    //更新课程数据
+    queryCoursePrams.entity.firstCategory = id;
+    querySearchCourse();
+    return ;
+  }
+  //课程分类
+  if( type =='scategory' ){
+    //免费课程和会员课程 之前数据清空
+    queryCoursePrams.entity.isMember = '';
+    queryCoursePrams.entity.isFree = '';
+    radio.value = '0';
+    //切换class
+    currentType[type].id = id;
+    currentType['clevel'].id = '';
+    //更新课程数据
+    queryCoursePrams.entity.courseLevel = '';
+    queryCoursePrams.entity.secondCategory = id;
+    querySearchCourse();
+    return ;
+  }
+  //课程难度
+  if( type =='clevel' ){
+    //切换class
+    currentType[type].id = id;
+    queryCoursePrams.entity.courseLevel = id;
+    querySearchCourse();
+    return ;
+  }
+}
+
+//免费课程 和 会员课程  切换
+watch( radio , (newVal,oldVal)=>{
+  //选中的免费课程
+  if( newVal == '1' ){
+    queryCoursePrams.entity.isMember = '';
+    queryCoursePrams.entity.isFree = '1';
+  }else if( newVal =='2' ){//会员课程
+    queryCoursePrams.entity.isFree = '';
+    queryCoursePrams.entity.isMember = '1';
+  }
+  querySearchCourse();
+})
+//综合
+const handleZonghe = ()=>{
+  priceSortBy.value = '1' 
+  queryCoursePrams.entity.sortBy = '';
+  querySearchCourse();
+}
+//最新课程
+const handleNewCourse = ()=>{
+  priceSortBy.value = '2' 
+  queryCoursePrams.entity.sortBy = 'time-desc';
+  querySearchCourse();
+}
+//最多购买
+const mostbuy = ()=>{
+  priceSortBy.value = '3' 
+  queryCoursePrams.entity.sortBy = 'purchase-desc';
+  querySearchCourse();
+}
+//价格
+const handlePrice = ()=>{
+
+  if( priceSortBy.value == '4' ||  priceSortBy.value != '5' ){
+    priceSortBy.value = '5'
+    queryCoursePrams.entity.sortBy = 'price-desc';
+  }else if( priceSortBy.value == '5'){
+    priceSortBy.value = '4'
+    queryCoursePrams.entity.sortBy = 'price-asc';
+  }
+  querySearchCourse();
 }
 </script>
 
