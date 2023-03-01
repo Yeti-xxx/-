@@ -9,15 +9,15 @@ export function getFirstCategorys() {
 }
 
 //获取二级分类
-export function getSecondCategorys( params ){
-	return request({
-		url:'/api/course/category/getSecondCategorys',
-		params
-	})
+export function getSecondCategorys(params) {
+    return request({
+        url: '/api/course/category/getSecondCategorys',
+        params
+    })
 }
 
 // 查询课程标签
-export function tagList(data){
+export function tagList(data) {
     return request({
         url: '/api/course/tags/list',
         method: "post",
@@ -26,7 +26,7 @@ export function tagList(data){
 }
 
 // 查询课程
-export function searchCourse(data){
+export function searchCourse(data) {
     return request({
         url: '/api/course/search',
         method: "post",
@@ -35,25 +35,34 @@ export function searchCourse(data){
 }
 
 // 轮播图
-export function getSlider(data){
+export function getSlider(data) {
     return request({
         url: '/api/slider/getSliders'
     })
 }
 
 //查询最新课程
-export function mostNewCourse( data ){
-	return request({
-		url:'/api/course/mostNew',
-		method:'post',
-		data
-	})
+export function mostNewCourse(data) {
+    return request({
+        url: '/api/course/mostNew',
+        method: 'post',
+        data
+    })
 }
 
 //查询网站配置
-export function getSetting(){
+export function getSetting() {
     return request({
-        url:'/api/setting/get',
-        method:'get'
+        url: '/api/setting/get',
+        method: 'get'
     })
 }
+
+// 课程详情
+export function getCourseDetail(params) {
+    return request({
+        url: '/api/course/getDetail',
+        params
+    })
+}
+
