@@ -64,20 +64,22 @@
                             <div class="tab-pane fade" v-else>
                                 <!-- 短信登录 -->
                                 <div class="tab-main">
-                                    <el-form>
+                                    <el-form ref="ruleFormRefPhone" :model="ruleFormPhone" :rules="rulesPhone">
                                         <el-form-item class="login-user" prop="phone">
                                             <el-icon>
                                                 <avatar />
                                             </el-icon>
-                                            <el-input placeholder="请输入您的手机号" />
+                                            <el-input v-model="ruleFormPhone.phone" placeholder="请输入您的手机号" />
                                         </el-form-item>
 
                                         <el-form-item class="login-Verification" prop="captcha">
-                                            <el-input placeholder="请输入您的手机号" />
-                                            <el-button class="btn btn-primary sendcaptcha" type="primary">发送验证码</el-button>
+                                            <el-input v-model="ruleFormPhone.captcha" placeholder="请输入您的验证码" />
+                                            <el-button @click="sendCode" class="btn btn-primary sendcaptcha"
+                                                type="primary">{{ captcha }}</el-button>
                                         </el-form-item>
                                         <div class="login-submit">
-                                            <el-button class="btn btn-primary sendcaptcha" type="primary">登录</el-button>
+                                            <el-button @click="phoneBtn(ruleFormRefPhone)" class="btn btn-primary sendcaptcha"
+                                                type="primary">登录</el-button>
                                         </div>
                                         <div class="login-text">
                                             登录即同意相关服务条款和隐私政策 <a>《小鹿线用户服务协议》</a><a>《小鹿线隐私政策》</a> 若您没有账号，系统将为您自动创建账号并登录。
@@ -98,7 +100,7 @@ import { ElMessage } from 'element-plus'
 //字体图标
 import { Avatar, Lock, Iphone } from "@element-plus/icons-vue";
 // 登录接口
-import { loginByJson } from '../utils/api/login'
+import { loginByJson, sendCaptcha, loginByMobile } from '../utils/api/login'
 // 加密操作
 import { Encrypt } from '../utils/api/aes'
 // pinia
@@ -158,6 +160,94 @@ const userBtn = (formEl) => {
             ElMessage({
                 showClose: true,
                 message: '请输入正确的用户名或密码',
+                type: 'error'
+            })
+        }
+    })
+}
+// 短信登录
+let captcha = ref('发送验证码')
+const ruleFormRefPhone = ref('');
+let ruleFormPhone = reactive({
+    phone: '',
+    captcha: ''
+})
+let rulesPhone = reactive({
+    phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur', },
+        { pattern: /^1[3456789]\d{9}$/, message: '目前只支持中国大陆的手机号码', },
+    ],
+    captcha: [
+        { required: true, message: '请输入验证码', trigger: 'blur', }
+    ]
+});
+let phoneTimer = null
+// 获取验证码接口
+const sendCode = () => {
+    let phone = ruleFormPhone.phone
+    let regTel = /^1[3456789]\d{9}$/
+    if (!regTel.test(phone)) {
+        return ElMessage({
+            showClose: true,
+            message: '请输入正确的电话号码',
+            type: 'error'
+        })
+    } else {
+        sendCaptcha({
+            mobile: ruleFormPhone.phone
+        }).then(res => {
+            if (res.meta.code === '200') {
+                // 短信验证码发送成功，调取倒计时函数
+                interCode()
+            }
+        })
+    }
+
+}
+// 倒计时函数
+const interCode = () => {
+    let timer = 10
+    captcha.value = '重新发送10秒'
+    clearInterval(phoneTimer)
+    phoneTimer = setInterval(() => {
+        timer--
+        if (timer <= 0) {
+            clearInterval(phoneTimer)
+            captcha.value = '重新发送'
+            timer = 10
+        } else {
+            captcha.value = `重新发送${timer}秒`
+        }
+    }, 1000)
+}
+// 点击短信登录
+const phoneBtn = (formEl) => {
+    if (!formEl) return
+    formEl.validate((valid, fields) => {
+        if (valid) {
+            // 用户输入的手机号
+            let mobile = Encrypt(ruleFormPhone.phone)
+            // 用户输入的验证码
+            let captcha = ruleFormPhone.captcha
+            loginByMobile({
+                mobile,
+                captcha
+            }).then(res => {
+                if (res.meta.code != '10006') {
+                    ElMessage({
+                        showClose: true,
+                        message: res.meta.msg,
+                        type: 'error'
+                    })
+                    return
+                }
+                console.log(res);
+                userStore.setToken(res.data.accessToken)
+            })
+        } else {
+            ElMessage({
+                showClose: true,
+                message: '请输入正确的手机号',
                 type: 'error'
             })
         }
