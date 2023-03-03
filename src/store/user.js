@@ -6,10 +6,15 @@ export const useUserStore = defineStore({
       token: ''
     }
   },
-  actions:{
-  	setToken( token ){
-  		this.token = token;
-  	}	
+  actions: {
+    // 设置token
+    setToken(token) {
+      this.token = token;
+    },
+    // 退出token
+    outLogin() {
+      this.token = ''
+    }
   },
   // 开启数据缓存
   persist: {

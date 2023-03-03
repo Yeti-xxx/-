@@ -155,7 +155,6 @@ let tagPagrList = ref([])
 let slidersList = ref([])
 // 鼠标移入课程分类
 const mourseHover = (id) => {
-    console.log(id);
     // 解决课程bug
     if (id !== 'fd50074e7b86403aa2ac1168abe020a0') {
         isFirst.value = true

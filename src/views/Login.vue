@@ -105,6 +105,9 @@ import { loginByJson, sendCaptcha, loginByMobile } from '../utils/api/login'
 import { Encrypt } from '../utils/api/aes'
 // pinia
 import { useUserStore } from '../store/user'
+// 路由
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const userStore = useUserStore()
 //账号登录和短信登录切换
 let current = ref(1);
@@ -147,7 +150,7 @@ const userBtn = (formEl) => {
                         type: 'success',
                     })
                     userStore.setToken(res.data.accessToken)
-
+                    router.push('/')
                 } else {
                     ElMessage({
                         showClose: true,
@@ -240,9 +243,10 @@ const phoneBtn = (formEl) => {
                         type: 'error'
                     })
                     return
+                }else{
+                    userStore.setToken(res.data.accessToken)
                 }
-                console.log(res);
-                userStore.setToken(res.data.accessToken)
+                
             })
         } else {
             ElMessage({

@@ -25,3 +25,19 @@ export function loginByMobile(data){
         data
     })
 }
+
+// 获取用户信息
+export function getInfo(data){
+    return request({
+        url:'/api/member/getInfo',
+        data
+    })
+
+}
+
+// 退出登录
+export function logout(){
+	return request({
+		url:'/api/u/logout'
+	})
+}
