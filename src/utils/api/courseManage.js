@@ -66,3 +66,19 @@ export function getCourseDetail(params) {
     })
 }
 
+// 检查下载资料是否有权限
+export function courseCheckAuth(params){
+    return request({
+        url:'/api/course/checkAuth',
+        params
+    })
+}
+
+// 下载资料
+export function downloadAttachment( params ){
+	return request({
+		url:'/api/course/downloadAttachment',
+		params,
+		responseType: 'blob',
+	})
+}

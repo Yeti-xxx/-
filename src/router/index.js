@@ -26,11 +26,17 @@ const routes = [
       import(/* webpackChunkName: "CourseInfo" */ "../views/CourseInfo.vue"),
   },
   {
-    path:'/login',
-    name:'Login',
-    component:()=>
+    path: '/login',
+    name: 'Login',
+    component: () =>
       import('../views/Login.vue')
-  }
+  },
+  {
+    path: '/course-play/:courseId',
+    name: 'course-play',
+    component: () =>
+      import(/* webpackChunkName: "CoursePlay" */ "../views/CoursePlay.vue"),
+  },
 ];
 
 const router = createRouter({
