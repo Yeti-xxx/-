@@ -77,7 +77,7 @@
 
                   <div class="coursePriceZero" v-if="item.discountPrice == 0">
                     <div class="pricefree">免费学习</div>
-                    <img src="../assets/img/free.png" alt="">
+                    <!-- <img src="../assets/img/free.png" alt=""> -->
                   </div>
 
                   <div class="coursePrice" v-else-if="item.isMember == 1">

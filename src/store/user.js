@@ -3,7 +3,8 @@ export const useUserStore = defineStore({
   id: 'user',
   state: () => {
     return {
-      token: ''
+      token: '',
+      userInfo:''
     }
   },
   actions: {
@@ -14,6 +15,11 @@ export const useUserStore = defineStore({
     // 退出token
     outLogin() {
       this.token = ''
+      this.userInfo = ''
+    },
+    // 设置userInfo
+    setUserInfo(userInfo){
+      this.userInfo = userInfo
     }
   },
   // 开启数据缓存

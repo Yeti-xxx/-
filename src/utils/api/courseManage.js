@@ -82,3 +82,28 @@ export function downloadAttachment( params ){
 		responseType: 'blob',
 	})
 }
+
+// 播放课程
+export function player(params){
+    return request({
+        url:'/api/player/play',
+        params
+    })
+}
+
+// 记录播放历史
+export function recordHistory(data){
+    return request({
+        url:'/api/course/history/recordHistory',
+        method:'post',
+        data
+    })
+}
+
+// 最后一次记录的视频播放时间
+export function getLastHistoryByChapterId(params){
+    return request({
+        url:'/api/course/history/getLastHistoryByChapterId',
+        params
+    })
+}

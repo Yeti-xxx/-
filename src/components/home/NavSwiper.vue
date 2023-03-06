@@ -192,7 +192,7 @@ onBeforeMount(() => {
     padding-top: 1px;
     width: 100%;
     height: 640px;
-    background: url('../../assets/img/transitionbg.png') no-repeat;
+    /* background: url('../../assets/img/transitionbg.png') no-repeat; */
 }
 
 .content {

@@ -17,12 +17,12 @@
         <div class="name">{{ courseInfo.courseName }}</div>
         <div class="info">
           <div class="Avat">
-            <img src="../assets/img/Avat62.png" alt="" />
+            <img src="https://www.xuexiluxian.cn/resources/images/avatar.png" alt="" />
           </div>
           <ul class="teacherName">
             <li class="name-item">
               {{ courseInfo.courseName }}
-              <img src="../assets/img/teacherStart.png" alt="" />
+              <img src="https://www.xuexiluxian.cn/resources/images/teacherStart.png" alt="" />
             </li>
             <li class="name-item">金牌讲师</li>
           </ul>
@@ -80,7 +80,7 @@
                 <span class="chapterName">{{ k.chapterName }}</span>
                 <span class="free" v-if="k.publicType === 2">试看</span>
               </div>
-              <button class="btn-learn" @click="goPlay(item)">开始学习</button>
+              <button class="btn-learn" @click="goPlay(item,k.id)">开始学习</button>
               <div class="clearfloat"></div>
             </li>
           </ul>
@@ -186,7 +186,7 @@ const downloadSource = (item) => {
 
 }
 // 点击开始学习
-const goPlay = (item) => {
+const goPlay = (item,chapterId) => {
    // 没有登录弹窗并跳转至登录页面
    if (!userStore.token) {
     router.push('/login')
@@ -195,7 +195,7 @@ const goPlay = (item) => {
       type: 'error',
     })
   }
-  // 登录状态正确，则判断是否拥有下载权限
+  // 登录状态正确
   courseCheckAuth({
     courseId: item.courseId
   }).then(res => {
@@ -207,7 +207,7 @@ const goPlay = (item) => {
     }
     // 有权限,开始播放
     router.push({
-      path: '/course-play/' + item.courseId,
+      path:`/course-play/${item.courseId}/${chapterId}`
     })
   })
 }
@@ -231,7 +231,7 @@ const goPlay = (item) => {
 .courseInfoTop {
   width: 100%;
   height: 200px;
-  background-image: url("../assets/img/courseInfobg1920.png");
+  background-image: url("https://www.xuexiluxian.cn/resources/images/courseInfobg1920.png");
 }
 
 .nav-container {

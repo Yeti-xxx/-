@@ -6,7 +6,11 @@
             </el-icon>
         </div>
         <div class='play'>
-            <div class='play-left'></div>
+            <div class='play-left'>
+                <!-- 组件提供的事件 @timeupdate  @loadstart-->
+                <!-- 详见 https://github.com/xdlumia/vue3-video-play -->
+                <vue3VideoPlay v-bind="options" @timeupdate="onTimeupdate" @loadstart="onLoadStart" />
+            </div>
             <div class='play-right'>
                 <el-tabs tab-position="right">
                     <el-tab-pane>
@@ -89,7 +93,82 @@
     </div>
 </template>
 <script setup>
+// 视频播放组件
+import "vue3-video-play/dist/style.css";
+import vue3VideoPlay from "vue3-video-play";
 import { ArrowLeftBold, Document } from "@element-plus/icons-vue";
+import { onBeforeMount } from "vue";
+import { useRoute } from "vue-router";
+import { useUserStore } from '../store/user'
+// api
+import { player, recordHistory, getLastHistoryByChapterId } from "../utils/api/courseManage";
+
+const route = useRoute()
+let { courseId, chapterId } = route.params
+// user仓库
+const userStore = useUserStore()
+//视频播放插件数据
+const options = reactive({
+    width: "100%", //播放器高度
+    height: "100%", //播放器高度
+    color: "#409eff", //主题色
+    title: "", //视频名称
+    src: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4", //视频源，由于接口提供的视频具有防盗链，所以此处写死
+    muted: false, //静音
+    webFullScreen: false,
+    speedRate: ["0.75", "1.0", "1.25", "1.5", "2.0"], //播放倍速
+    autoPlay: false, //自动播放
+    loop: false, //循环播放
+    mirror: false, //镜像画面
+    ligthOff: false, //关灯模式
+    volume: 0.3, //默认音量大小
+    control: true, //是否显示控制
+    controlBtns: [
+        "audioTrack",
+        "quality",
+        "speedRate",
+        "volume",
+        "setting",
+        "pip",
+        "pageFullScreen",
+        "fullScreen",
+    ], //显示所有按钮,
+});
+
+onBeforeMount(() => {
+
+})
+// 开始请求视频数据时
+const onLoadStart = (e) => {
+    // e.target.currentTime =
+    getLastHistoryByChapterId({
+        chapterId,
+        courseId,
+        memberId: userStore.userInfo.id,
+    }).then(res => {
+        e.target.currentTime = res.data.data.lastTime
+    })
+}
+
+
+// 为了提升性能，一段时间再进行一次保存
+let time = ref(0)
+const onTimeupdate = (e) => {
+    time.value++
+    if (time.value >= 10) {
+        recordHistory({
+            chapterId,
+            courseId,
+            memberId: userStore.userInfo.id,
+            lastTime: e.target.currentTime
+        }).then(res => {
+            console.log(res);
+        })
+        time.value = 0
+    }
+
+}
+
 </script>
 <style scoped>
 :deep(.el-tabs__item) {
@@ -457,4 +536,5 @@ import { ArrowLeftBold, Document } from "@element-plus/icons-vue";
 
 .note {
     margin-top: 150px;
-}</style>
+}
+</style>

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import About from '../views/About.vue'
+import { useUserStore } from "../store/user";
 const routes = [
   {
     path: "/",
@@ -32,10 +33,23 @@ const routes = [
       import('../views/Login.vue')
   },
   {
-    path: '/course-play/:courseId',
+    path: '/course-play/:courseId/:chapterId',
     name: 'course-play',
     component: () =>
       import(/* webpackChunkName: "CoursePlay" */ "../views/CoursePlay.vue"),
+  },
+  {
+    path: "/cart",
+    name: "Cart",
+    component: () =>
+      import(/* webpackChunkName: "cart" */ "../views/Cart.vue"),
+    beforeEnter: (to, from, next) => {
+      if (useUserStore().userInfo.id) {
+        next()
+      } else {
+        next('/login')
+      }
+    }
   },
 ];
 

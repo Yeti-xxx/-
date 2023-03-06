@@ -22,7 +22,7 @@
 						<search />
 					</el-icon>
 				</div>
-				<div class='cntent-shopping'>
+				<div class='cntent-shopping' @click="goCart">
 					<el-icon :size='24' color='#808080'><shopping-cart /></el-icon>
 				</div>
 				<div class='content-login' v-if='!isLogin'>
@@ -125,6 +125,7 @@ onBeforeMount(() => {
 			if (res.meta.code == '200') {
 				//用户信息
 				userInfo.value = res.data.data;
+				userStore.setUserInfo(userInfo.value)
 				//用户vip
 				vipInfo.value = res.data.data.vipInfo;
 				//计算会员到期时间
@@ -150,6 +151,11 @@ const LoginOut = () => {
 			});
 		}
 	})
+}
+
+// 前往购物车页面
+const goCart = ()=>{
+	router.push('/cart')
 }
 </script>
 
