@@ -63,7 +63,7 @@
           </div>
           <div class="btn">
             <button class="btn-item active">立即购买</button>
-            <button class="btn-item">加入购物车</button>
+            <button class="btn-item" @click="addCart">加入购物车</button>
           </div>
         </div>
         <div class="video" v-for="item in courseChapters" :key="item.id">
@@ -80,7 +80,7 @@
                 <span class="chapterName">{{ k.chapterName }}</span>
                 <span class="free" v-if="k.publicType === 2">试看</span>
               </div>
-              <button class="btn-learn" @click="goPlay(item,k.id)">开始学习</button>
+              <button class="btn-learn" @click="goPlay(item, k.id)">开始学习</button>
               <div class="clearfloat"></div>
             </li>
           </ul>
@@ -114,6 +114,8 @@ import { useRoute } from 'vue-router'
 import { onBeforeMount } from 'vue';
 import { useUserStore } from '../store/user';
 import { useRouter } from 'vue-router'
+import { addShopCart } from '../utils/api/cart'
+import { createToken } from '../utils/api/createToken'
 // mixin
 import mixin from '../mixins/courseType.js'
 const userStore = useUserStore()
@@ -186,9 +188,9 @@ const downloadSource = (item) => {
 
 }
 // 点击开始学习
-const goPlay = (item,chapterId) => {
-   // 没有登录弹窗并跳转至登录页面
-   if (!userStore.token) {
+const goPlay = (item, chapterId) => {
+  // 没有登录弹窗并跳转至登录页面
+  if (!userStore.token) {
     router.push('/login')
     return ElMessage({
       message: '未登录',
@@ -207,9 +209,33 @@ const goPlay = (item,chapterId) => {
     }
     // 有权限,开始播放
     router.push({
-      path:`/course-play/${item.courseId}/${chapterId}`
+      path: `/course-play/${item.courseId}/${chapterId}`
+    }).then(res => {
+
     })
   })
+}
+// 加入购物车
+const addCart = () => {
+  createToken().then(res => {
+    addShopCart({
+      courseId,
+      memberId: useUserStore().userInfo.id
+    }, res.data.token).then(res => {
+      if (res.meta.code == 200) {
+        return ElMessage({
+          message: '添加成功',
+          type: 'success',
+        })
+      }else{
+        return ElMessage({
+          message: '添加失败或已在购物车中',
+          type: 'warning',
+        })
+      }
+    })
+  })
+
 }
 
 </script>

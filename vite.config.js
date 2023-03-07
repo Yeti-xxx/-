@@ -12,6 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://testapi.xuexiluxian.cn'
-    }
+    },
+    hmr:true
   }
 })
