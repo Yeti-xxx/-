@@ -51,6 +51,19 @@ const routes = [
       }
     }
   },
+  {
+    path: "/confirmOrder",
+    name: "ConfirmOrder",
+    component: () =>
+      import(/* webpackChunkName: "cart" */ "../views/ConfirmOrder.vue"),
+    beforeEnter: (to, from, next) => {
+      if (useUserStore().userInfo.id) {
+        next()
+      } else {
+        next('/login')
+      }
+    }
+  },
 ];
 
 const router = createRouter({

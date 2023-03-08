@@ -16,6 +16,15 @@ export function deletShopCart(params,token){
     })
 }
 
+// 批量删除购物车
+export function deleteShopCars(data){
+    return request({
+        url:'/api/shopcar/deleteShopCars',
+        method:'post',
+        params,
+    })
+}
+
 // 加入购物车
 export function addShopCart(data,token){
     return request({

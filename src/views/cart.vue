@@ -51,7 +51,7 @@
           <li class="foot-item">已选课程<span class="unique">{{ total.number }}</span></li>
           <li class="foot-item">合计<span class="unique">{{ total.price }}</span></li>
           <li>
-            <button class="btn">去结算</button>
+            <button class="btn" @click="goConfirm">去结算</button>
           </li>
         </ul>
       </div>
@@ -103,6 +103,11 @@ const del = (id) => {
         router.go(0)
     })
   })
+}
+
+// 前往结算页面
+const goConfirm = ()=>{
+  router.push('/confirmOrder')
 }
 
 

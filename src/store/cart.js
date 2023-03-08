@@ -5,10 +5,12 @@ export const useCartStore = defineStore({
         return {
             cartList: [], //购物车数据
             select: [],   //选中商品的id
+            orderList:[],     //结算的商品
         }
     },
     actions: {
         addCart(list) {
+            this.select = []
             list.forEach(item => {
                 item['check'] = true
                 this.select.push(item.id)
@@ -69,9 +71,14 @@ export const useCartStore = defineStore({
                 price: 0,
                 number: _this.select.length
             }
+            this.orderList=[]
             this.cartList.forEach(v => {
                 if (_this.select.indexOf(v.id) != -1) {
                     total.price += v.discountPrice * v.counter
+                    this.orderList.push({
+                        number:1,
+                        id:v.courseId
+                    })
                 }
             })
             return total

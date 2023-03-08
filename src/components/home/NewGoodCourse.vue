@@ -38,7 +38,6 @@
                             <div class="coursePricePri" v-else>
                                 <div class="pricePri">¥ {{ item.discountPrice }}</div>
                             </div>
-
                         </div>
                     </RouterLink>
                 </li>
